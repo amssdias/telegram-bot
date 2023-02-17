@@ -49,6 +49,14 @@ class RocketBot:
         @self.bot.message_handler(func=lambda msg: True)
         def process_answer(message) -> None:
             chat_id = message.chat.id
+            
+            if not self.users.user_exists(chat_id=chat_id):
+                self.bot.send_message(
+                    chat_id=chat_id,
+                    text=f"To start, type /start.",
+                )
+                return None
+
             user_frames = self.users.get_user_info(chat_id=chat_id)
 
             if (

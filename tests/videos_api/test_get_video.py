@@ -5,7 +5,6 @@ from videos_api.utils import get_video_info
 
 
 class TestGetVideo(unittest.TestCase):
-
     def setUp(self) -> None:
         self.url = "http://testing.com/"
         return super().setUp()

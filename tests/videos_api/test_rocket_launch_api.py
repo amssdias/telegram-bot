@@ -6,7 +6,6 @@ from videos_api.rocket_launch import RocketLaunchAPI
 
 
 class TestRocketLaunchAPI(unittest.TestCase):
-
     def setUp(self) -> None:
         self.frames = 10000
         self.url = "http://testing.com/"

@@ -32,9 +32,7 @@ class RocketBot:
                 text=f"I need your help to discover the exact frame where a rocket got launched. (You can check it by watching the picture on the top right corner)",
             )
 
-            img = self.rocket.get_frame(self.current_frame)
-            if img:
-                self.send_rocket_img(img=img, chat_id=message.chat.id)
+            self.send_rocket_image(chat_id=message.chat.id)
 
         @self.bot.message_handler(func=lambda msg: True)
         def process_answer(message) -> None:
@@ -53,32 +51,38 @@ class RocketBot:
 
             if message.text.upper() in ["YES", "Y"]:
                 # Go back on frames
-
-                self.max_frame = self.current_frame + 1
-                self.current_frame = (self.min_frame + self.max_frame) // 2
-
-                img = self.rocket.get_frame(self.current_frame)
-                if img:
-                    self.send_rocket_img(img=img, chat_id=message.chat.id)
+                self.update_frames(backwards=True)
+                self.send_rocket_image(chat_id=message.chat.id)
 
             elif message.text.upper() in ["NO", "N"]:
                 # Go front on frames
-
-                self.min_frame = self.current_frame - 1
-                self.current_frame = (self.min_frame + self.max_frame) // 2
-
-                img = self.rocket.get_frame(self.current_frame)
-                if img:
-                    self.send_rocket_img(img=img, chat_id=message.chat.id)
+                self.update_frames(backwards=False)
+                self.send_rocket_image(chat_id=message.chat.id)
 
             else:
-                self.bot.reply_to(
-                    message, "I'm sorry, I didn't understand your response."
-                )
+                self.bot.reply_to(message, "I'm sorry, I didn't understand your response. Just type 'Yes' or 'No'.")
 
         self.bot.infinity_polling()
 
-    def send_rocket_img(self, img, chat_id, text="Did the rocket launched?"):
+    def update_frames(self, backwards: bool):
+        if backwards:
+            self.max_frame = self.current_frame + 1
+        else:
+            self.min_frame = self.current_frame - 1
+
+        self.current_frame = (self.min_frame + self.max_frame) // 2
+
+    def send_rocket_image(self, chat_id) -> None:
+        img = self.rocket.get_frame(self.current_frame)
+        if img:
+            self.send_rocket_img_message(img=img, chat_id=chat_id)
+        else:
+            self.bot.send_message(
+                chat_id=chat_id,
+                text="Sorry, the image is not available, try again later.",
+            )
+
+    def send_rocket_img_message(self, img, chat_id, text="Did the rocket launched?") -> None:
         photo = io.BytesIO(img)
         self.bot.send_photo(chat_id=chat_id, photo=photo)
 

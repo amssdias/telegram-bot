@@ -2,6 +2,7 @@
 [telegram-bot-tutorial]: https://medium.com/geekculture/generate-telegram-token-for-bot-api-d26faf9bf064
 
 ![Python Badge](https://img.shields.io/badge/Python-3.9-blue?logo=python)
+![Workflow branch master](https://github.com/amssdias/telegram-bot/actions/workflows/testing.yml/badge.svg?branch=master)
 [![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://https://docker.com/)
 
 <h1 align=center>Telegram Bot</h1>

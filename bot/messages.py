@@ -104,7 +104,7 @@ class RocketBot:
 
         self.bot.infinity_polling()
 
-    def update_user_frames(self, chat_id, user_frames, backwards: bool) -> Dict:
+    def update_user_frames(self, chat_id: int, user_frames: Dict, backwards: bool) -> Dict:
         """Recalculate user frames and save them back on the current user."""
 
         if backwards:
@@ -118,7 +118,7 @@ class RocketBot:
 
         return user_frames
 
-    def send_rocket_image(self, chat_id, current_frame) -> None:
+    def send_rocket_image(self, chat_id: int, current_frame: int) -> None:
         img = self.rocket.get_frame(current_frame)
         if img:
             self.send_rocket_img_message(img=img, chat_id=chat_id)
@@ -128,7 +128,7 @@ class RocketBot:
                 text="Sorry, the image is not available, try again later.",
             )
 
-    def send_rocket_img_message(self, img, chat_id, text="Did the rocket launched?") -> None:
+    def send_rocket_img_message(self, img, chat_id: int, text="Did the rocket launched?") -> None:
         photo = io.BytesIO(img)
         self.bot.send_photo(chat_id=chat_id, photo=photo)
 

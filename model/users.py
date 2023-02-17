@@ -13,10 +13,15 @@ class Users:
     def get_user_info(self, chat_id) -> Dict:
         return json.loads(self.redis_client.get(chat_id))
 
-    def create_user(self, chat_id, max_frame):
-        info = {
+    def create_user(self, chat_id, max_frame) -> Dict:
+        user_frames_info = {
             "current_frame": max_frame // 2,
             "min_frame": 0,
             "max_frame": max_frame,
         }
-        return self.redis_client.set(chat_id, json.dumps(info))
+        self.redis_client.set(chat_id, json.dumps(user_frames_info))
+        
+        return user_frames_info
+
+    def update_user(self, chat_id, user_new_frames: Dict) -> bool:
+        return self.redis_client.set(chat_id, json.dumps(user_new_frames))

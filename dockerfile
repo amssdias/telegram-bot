@@ -1,10 +1,17 @@
-FROM python:3.9
+FROM python:3.9-slim-buster
 
-COPY . my_project/
+# Install Redis
+RUN apt-get update && apt-get install -y redis-server
 
-WORKDIR /my_project
+COPY . app/
 
-RUN apt-get update
+# Set working directory
+WORKDIR /app
+
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["python", "main.py"]
+# Expose the Redis port
+EXPOSE 6379
+
+# Run Redis and the application
+CMD [ "sh", "-c", "redis-server & python main.py" ]

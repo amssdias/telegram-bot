@@ -1,7 +1,7 @@
 import requests
 
 
-class RocketLaunch:
+class RocketLaunchAPI:
     def __init__(self, frames, url):
         self.frames = frames
         self.url = url

@@ -3,7 +3,7 @@ import telebot
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 from settings import VIDEO_URL
-from videos_api.rocket_launch import RocketLaunch
+from videos_api.rocket_launch import RocketLaunchAPI
 from videos_api.utils import get_video_info
 
 
@@ -12,7 +12,8 @@ class RocketBot:
         self.bot = telebot.TeleBot(token, parse_mode=None)
 
         rl_info = get_video_info(VIDEO_URL)
-        self.rocket = RocketLaunch(frames=rl_info["frames"], url=rl_info["url"])
+        if rl_info:
+            self.rocket = RocketLaunchAPI(frames=rl_info["frames"], url=rl_info["url"])
 
         self.keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
         self.keyboard.add(KeyboardButton("Yes"), KeyboardButton("No"))

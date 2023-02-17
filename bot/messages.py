@@ -34,6 +34,10 @@ class RocketBot:
                     chat_id=chat_id,
                     text=f"Hey {first_name}! Can you continue helping me discover when was the exact frame a rocket launched? (You can check it by watching the picture on the top right corner)",
                 )
+                self.bot.send_message(
+                    chat_id=chat_id,
+                    text="If you would like to restart from beginning just type /restart.",
+                )
 
             else:
                 user_frames_info = self.users.create_user(chat_id=chat_id, max_frame=self.rocket.frames)
@@ -45,6 +49,15 @@ class RocketBot:
                 )
 
             self.send_rocket_image(chat_id=chat_id, current_frame=user_frames_info["current_frame"])
+
+        @self.bot.message_handler(commands=["restart"])
+        def restart(message) -> None:
+            chat_id = message.chat.id
+            self.users.delete_user(chat_id)
+            self.bot.send_message(
+                    chat_id=chat_id,
+                    text="Great. To start again type /start.",
+                )
 
         @self.bot.message_handler(func=lambda msg: True)
         def process_answer(message) -> None:

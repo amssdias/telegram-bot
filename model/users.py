@@ -25,3 +25,6 @@ class Users:
 
     def update_user(self, chat_id, user_new_frames: Dict) -> bool:
         return self.redis_client.set(chat_id, json.dumps(user_new_frames))
+
+    def delete_user(self, chat_id) -> int:
+        return self.redis_client.delete(chat_id)

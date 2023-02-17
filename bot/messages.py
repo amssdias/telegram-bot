@@ -12,7 +12,7 @@ from videos_api.utils import get_video_info
 class RocketBot:
     def __init__(self, token):
         self.bot = telebot.TeleBot(token, parse_mode=None)
-        self.users = Users()
+        self.db = Users()
 
         rl_info = get_video_info(VIDEO_URL)
         if rl_info:
@@ -28,8 +28,8 @@ class RocketBot:
             first_name = message.from_user.first_name
 
             # Check if user exists, if yes, ask him to help you again, else save user info
-            if self.users.user_exists(chat_id):
-                user_frames_info = self.users.get_user_info(chat_id)
+            if self.db.user_exists(chat_id):
+                user_frames_info = self.db.get_user_info(chat_id)
                 self.bot.send_message(
                     chat_id=chat_id,
                     text=f"Hey {first_name}! Can you continue helping me discover when was the exact frame a rocket launched? (You can check it by watching the picture on the top right corner)",
@@ -40,7 +40,7 @@ class RocketBot:
                 )
 
             else:
-                user_frames_info = self.users.create_user(chat_id=chat_id, max_frame=self.rocket.frames)
+                user_frames_info = self.db.create_user(chat_id=chat_id, max_frame=self.rocket.frames)
 
                 self.bot.reply_to(message, f"Hey, {first_name}!")
                 self.bot.send_message(
@@ -53,7 +53,7 @@ class RocketBot:
         @self.bot.message_handler(commands=["restart"])
         def restart(message) -> None:
             chat_id = message.chat.id
-            self.users.delete_user(chat_id)
+            self.db.delete_user(chat_id)
             self.bot.send_message(
                     chat_id=chat_id,
                     text="Great. To start again type /start.",
@@ -63,14 +63,14 @@ class RocketBot:
         def process_answer(message) -> None:
             chat_id = message.chat.id
             
-            if not self.users.user_exists(chat_id=chat_id):
+            if not self.db.user_exists(chat_id=chat_id):
                 self.bot.send_message(
                     chat_id=chat_id,
                     text=f"To start, type /start.",
                 )
                 return None
 
-            user_frames = self.users.get_user_info(chat_id=chat_id)
+            user_frames = self.db.get_user_info(chat_id=chat_id)
 
             if (
                 user_frames["current_frame"] + 1 == user_frames["max_frame"]
@@ -80,7 +80,7 @@ class RocketBot:
                 
                 self.bot.send_message(
                     chat_id=chat_id,
-                    text=f"You found it! The frame is {frame}",
+                    text=f"You found it! The frame is {frame}. To do it again type /start.",
                 )
 
                 return None
@@ -114,7 +114,7 @@ class RocketBot:
 
         user_frames["current_frame"] = (user_frames["min_frame"] + user_frames["max_frame"]) // 2
         
-        self.users.update_user(chat_id, user_frames)
+        self.db.update_user(chat_id, user_frames)
 
         return user_frames
 

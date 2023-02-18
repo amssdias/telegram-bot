@@ -1,7 +1,9 @@
 [python-download]: https://www.python.org/downloads/
+[redis-download]: https://redis.io/download/
 [telegram-bot-tutorial]: https://medium.com/geekculture/generate-telegram-token-for-bot-api-d26faf9bf064
 
 ![Python Badge](https://img.shields.io/badge/Python-3.9-blue?logo=python)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=flat&logo=redis&logoColor=white)
 ![Workflow branch master](https://github.com/amssdias/telegram-bot/actions/workflows/testing.yml/badge.svg?branch=master)
 [![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://https://docker.com/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -17,6 +19,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Pre requisites
 
 - [Python][python-download] - 3.9
+- [Redis][redis-download]
 - [Docker](https://www.docker.com/) (Optional)
 
 ### Installing
@@ -55,14 +58,15 @@ docker run -it telegram-bot
 
 #### Run without Docker
 
+1. Install [Redis][redis-download]
 
-1. Install requirements with pip:
+2. Install requirements with pip:
 
 ```python
 pip install -r requirements.txt
 ```
 
-2. Run program:
+3. Run program:
 
 ```python
 python main.py

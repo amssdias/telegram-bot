@@ -40,7 +40,9 @@ class RocketBot:
                 )
 
             else:
-                user_frames_info = self.db.create_user(chat_id=chat_id, max_frame=self.rocket.frames)
+                user_frames_info = self.db.create_user(
+                    chat_id=chat_id, max_frame=self.rocket.frames
+                )
 
                 self.bot.reply_to(message, f"Hey, {first_name}!")
                 self.bot.send_message(
@@ -48,21 +50,23 @@ class RocketBot:
                     text=f"I need your help to discover the exact frame where a rocket got launched. (You can check it by watching the picture on the top right corner)",
                 )
 
-            self.send_rocket_image(chat_id=chat_id, current_frame=user_frames_info["current_frame"])
+            self.send_rocket_image(
+                chat_id=chat_id, current_frame=user_frames_info["current_frame"]
+            )
 
         @self.bot.message_handler(commands=["restart"])
         def restart(message) -> None:
             chat_id = message.chat.id
             self.db.delete_user(chat_id)
             self.bot.send_message(
-                    chat_id=chat_id,
-                    text="Great. To start again type /start.",
-                )
+                chat_id=chat_id,
+                text="Great. To start again type /start.",
+            )
 
         @self.bot.message_handler(func=lambda msg: True)
         def process_answer(message) -> None:
             chat_id = message.chat.id
-            
+
             if not self.db.user_exists(chat_id=chat_id):
                 self.bot.send_message(
                     chat_id=chat_id,
@@ -71,49 +75,58 @@ class RocketBot:
                 return None
 
             user_frames = self.db.get_user_info(chat_id=chat_id)
+            user_message = message.text.upper()
 
-            if (
-                user_frames["current_frame"] + 1 == user_frames["max_frame"]
-                or user_frames["current_frame"] - 1 == user_frames["min_frame"]
-            ):
-                frame = user_frames["max_frame"] if user_frames["current_frame"] + 1 == user_frames["max_frame"] else user_frames["min_frame"]
-                
+            if self.found_frame(user_frames):
+                frame = (
+                    user_frames["max_frame"]
+                    if user_frames["current_frame"] == user_frames["min_frame"]
+                    and user_message in ["NO", "N"]
+                    else user_frames["min_frame"]
+                )
+
                 self.bot.send_message(
                     chat_id=chat_id,
                     text=f"You found it! The frame is {frame}. To do it again type /start.",
                 )
+                self.db.delete_user(chat_id)
 
                 return None
 
-            if message.text.upper() in ["YES", "Y"]:
-                # Go back on frames
-                new_frames = self.update_user_frames(chat_id=chat_id, user_frames=user_frames, backwards=True)
+            if user_message in ["YES", "Y", "NO", "N"]:
+                # Go backwards frames if True
+                backwards = True if user_message in ["YES", "Y"] else False
+                new_frames = self.update_user_frames(
+                    chat_id=chat_id, user_frames=user_frames, backwards=backwards
+                )
 
                 # Send rocket image with new frames
-                self.send_rocket_image(chat_id=chat_id, current_frame=new_frames["current_frame"])
-
-            elif message.text.upper() in ["NO", "N"]:
-                # Go front on frames
-                new_frames = self.update_user_frames(chat_id=chat_id, user_frames=user_frames, backwards=False)
-
-                # Send rocket image with new frames
-                self.send_rocket_image(chat_id=chat_id, current_frame=new_frames["current_frame"])
+                self.send_rocket_image(
+                    chat_id=chat_id, current_frame=new_frames["current_frame"]
+                )
 
             else:
-                self.bot.reply_to(message, "I'm sorry, I didn't understand your response. Just type 'Yes' or 'No'.")
+                self.bot.reply_to(
+                    message,
+                    "I'm sorry, I didn't understand your response. Just type 'Yes' or 'No'.",
+                )
 
         self.bot.infinity_polling()
 
-    def update_user_frames(self, chat_id: int, user_frames: Dict, backwards: bool) -> Dict:
+    def update_user_frames(
+        self, chat_id: int, user_frames: Dict, backwards: bool
+    ) -> Dict:
         """Recalculate user frames and save them back on the current user."""
 
         if backwards:
-            user_frames["max_frame"] = user_frames["current_frame"] + 1
+            user_frames["max_frame"] = user_frames["current_frame"] - 1
         else:
-            user_frames["min_frame"] = user_frames["current_frame"] - 1
+            user_frames["min_frame"] = user_frames["current_frame"] + 1
 
-        user_frames["current_frame"] = (user_frames["min_frame"] + user_frames["max_frame"]) // 2
-        
+        user_frames["current_frame"] = (
+            user_frames["min_frame"] + user_frames["max_frame"]
+        ) // 2
+
         self.db.update_user(chat_id, user_frames)
 
         return user_frames
@@ -128,7 +141,9 @@ class RocketBot:
                 text="Sorry, the image is not available, try again later.",
             )
 
-    def send_rocket_img_message(self, img, chat_id: int, text="Did the rocket launched?") -> None:
+    def send_rocket_img_message(
+        self, img, chat_id: int, text="Did the rocket launched?"
+    ) -> None:
         photo = io.BytesIO(img)
         self.bot.send_photo(chat_id=chat_id, photo=photo)
 
@@ -136,4 +151,11 @@ class RocketBot:
             chat_id=chat_id,
             text=text,
             reply_markup=self.keyboard,
+        )
+
+    def found_frame(self, user_frames: Dict) -> bool:
+        """Verify if user found the correct frame."""
+        return (
+            user_frames["current_frame"] == user_frames["max_frame"]
+            or user_frames["current_frame"] == user_frames["min_frame"]
         )

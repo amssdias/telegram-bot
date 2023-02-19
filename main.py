@@ -1,4 +1,4 @@
-from bot.messages import RocketBot
+from bot.rocket_bot import RocketBot
 from settings import BOT_TOKEN
 
 

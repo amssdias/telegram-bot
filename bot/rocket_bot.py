@@ -60,7 +60,7 @@ class RocketBot:
             self.bot.reply_to(message, f"Hey, {first_name}!")
             self.bot.send_message(
                 chat_id=chat_id,
-                text=f"I need your help to discover the exact frame where a rocket got launched. (You can check it by watching the picture on the top right corner)",
+                text="I need your help to discover the exact frame where a rocket got launched. (You can check it by watching the picture on the top right corner)",
             )
 
         self.send_rocket_image(
@@ -81,7 +81,7 @@ class RocketBot:
         if not self.db.user_exists(chat_id=chat_id):
             self.bot.send_message(
                 chat_id=chat_id,
-                text=f"To start, type /start.",
+                text="To start, type /start.",
             )
             return None
 
@@ -89,19 +89,10 @@ class RocketBot:
         user_message = message.text.upper()
 
         if self.found_frame(user_frames) and user_message in ["YES", "Y", "NO", "N"]:
-            frame = (
-                user_frames["max_frame"]
-                if user_frames["current_frame"] == user_frames["min_frame"]
-                and user_message in ["NO", "N"]
-                else user_frames["min_frame"]
-            )
-
-            self.bot.send_message(
-                chat_id=chat_id,
-                text=f"You found it! The frame is {frame}. To do it again type /start.",
+            self.find_frame_and_send_message(
+                chat_id=chat_id, user_frames=user_frames, user_message=user_message
             )
             self.db.delete_user(chat_id)
-
             return None
 
         if user_message in ["YES", "Y", "NO", "N"]:
@@ -167,4 +158,19 @@ class RocketBot:
         return (
             user_frames["current_frame"] == user_frames["max_frame"]
             or user_frames["current_frame"] == user_frames["min_frame"]
+        )
+
+    def find_frame_and_send_message(
+        self, chat_id: int, user_frames: Dict, user_message=str
+    ) -> None:
+        frame = (
+            user_frames["max_frame"]
+            if user_frames["current_frame"] == user_frames["min_frame"]
+            and user_message in ["NO", "N"]
+            else user_frames["min_frame"]
+        )
+
+        self.bot.send_message(
+            chat_id=chat_id,
+            text=f"You found it! The frame is {frame}. To do it again type /start.",
         )

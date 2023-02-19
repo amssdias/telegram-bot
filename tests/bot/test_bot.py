@@ -70,7 +70,7 @@ class TestRocketBot(unittest.TestCase):
         )
         self.rocket_bot.bot.send_message.assert_called_once_with(
             chat_id=message_mock.chat.id,
-            text="I need your help to discover the exact frame where a rocket got launched. (You can check it by watching the picture on the top right corner)",
+            text="I need your help to discover the exact frame where a rocket got launched. (You can check it by watching the picture in the top right corner)",
         )
         self.rocket_bot.send_rocket_image.assert_called_once_with(
             chat_id=1234, current_frame=user_frames["current_frame"]
@@ -107,7 +107,7 @@ class TestRocketBot(unittest.TestCase):
 
         self.rocket_bot.db.delete_user.assert_called_once_with(message_mock.chat.id)
         self.rocket_bot.bot.send_message.assert_called_once_with(
-            chat_id=message_mock.chat.id, text="Great. To start again type /start."
+            chat_id=message_mock.chat.id, text="Great. To start again, type /start."
         )
 
     def test_proccess_answer(self):

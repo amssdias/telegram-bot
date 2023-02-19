@@ -45,7 +45,7 @@ class RocketBot:
             user_frames_info = self.db.get_user_info(chat_id)
             self.bot.send_message(
                 chat_id=chat_id,
-                text=f"Hey {first_name}! Can you continue helping me discover when was the exact frame a rocket launched? (You can check it by watching the picture on the top right corner)",
+                text=f"Hey {first_name}! Can you continue helping me discover when was the exact frame a rocket launched? (You can check it by watching the picture in the top right corner)",
             )
             self.bot.send_message(
                 chat_id=chat_id,
@@ -60,7 +60,7 @@ class RocketBot:
             self.bot.reply_to(message, f"Hey, {first_name}!")
             self.bot.send_message(
                 chat_id=chat_id,
-                text="I need your help to discover the exact frame where a rocket got launched. (You can check it by watching the picture on the top right corner)",
+                text="I need your help to discover the exact frame where a rocket got launched. (You can check it by watching the picture in the top right corner)",
             )
 
         self.send_rocket_image(
@@ -72,7 +72,7 @@ class RocketBot:
         self.db.delete_user(chat_id)
         self.bot.send_message(
             chat_id=chat_id,
-            text="Great. To start again type /start.",
+            text="Great. To start again, type /start.",
         )
 
     def process_answer(self, message) -> None:
@@ -142,7 +142,7 @@ class RocketBot:
             )
 
     def send_rocket_img_message(
-        self, img, chat_id: int, text="Did the rocket launched?"
+        self, img, chat_id: int, text="Did the rocket launch?"
     ) -> None:
         photo = io.BytesIO(img)
         self.bot.send_photo(chat_id=chat_id, photo=photo)

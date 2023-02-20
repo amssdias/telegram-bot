@@ -1,6 +1,10 @@
+import logging
 import json
 import redis
 from typing import Dict, Union
+
+
+logger = logging.getLogger("telegram-bot-logger")
 
 
 class Users:
@@ -30,7 +34,12 @@ class Users:
             else False
         )
 
-        return user if not user else user_frames_info
+        if user:
+            logger.info(f"User with chat ID: {chat_id} created.")
+            return user_frames_info
+        else:
+            logger.info(f"User with chat ID: {chat_id} already exists.")
+            return user
 
     def update_user(self, chat_id: int, user_new_frames: Dict) -> bool:
         return (
@@ -40,4 +49,5 @@ class Users:
         )
 
     def delete_user(self, chat_id: int) -> int:
+        logger.info(f"User with chat ID: {chat_id} deleted.")
         return self.redis_client.delete(chat_id)

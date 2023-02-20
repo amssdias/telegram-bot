@@ -18,41 +18,42 @@ info_formatter = logging.Formatter("%(levelname)-8s %(asctime)s: %(message)s - %
 error_formatter = logging.Formatter("%(levelname)-8s %(asctime)s: %(message)s - %(module)s - %(funcName)s - %(lineno)d")
 
 # Create a file handlers
-debug_handler = logging.FileHandler('logs/debug.log')
-debug_handler.setLevel(logging.DEBUG)
-debug_handler.setFormatter(info_formatter)
+# debug_handler = logging.FileHandler('logs/debug.log')
+# debug_handler.setLevel(logging.DEBUG)
+# debug_handler.setFormatter(info_formatter)
 
-info_handler = logging.FileHandler('logs/info.log')
-info_handler.setLevel(logging.INFO)
-info_handler.setFormatter(info_formatter)
+# info_handler = logging.FileHandler('logs/info.log')
+# info_handler.setLevel(logging.INFO)
+# info_handler.setFormatter(info_formatter)
 
-warning_handler = logging.FileHandler('logs/warning.log')
-warning_handler.setLevel(logging.WARNING)
-warning_handler.setFormatter(error_formatter)
+# warning_handler = logging.FileHandler('logs/warning.log')
+# warning_handler.setLevel(logging.WARNING)
+# warning_handler.setFormatter(error_formatter)
 
-error_handler = logging.FileHandler('logs/error.log')
-error_handler.setLevel(logging.ERROR)
-error_handler.setFormatter(error_formatter)
+# error_handler = logging.FileHandler('logs/error.log')
+# error_handler.setLevel(logging.ERROR)
+# error_handler.setFormatter(error_formatter)
 
-critical_handler = logging.FileHandler('logs/critical.log')
-critical_handler.setLevel(logging.CRITICAL)
-critical_handler.setFormatter(error_formatter)
+# critical_handler = logging.FileHandler('logs/critical.log')
+# critical_handler.setLevel(logging.CRITICAL)
+# critical_handler.setFormatter(error_formatter)
 
 # Create a console handler
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
+console_handler.setFormatter(logging.INFO)
 
-logger.addHandler(debug_handler)
-logger.addHandler(info_handler)
-logger.addHandler(warning_handler)
-logger.addHandler(error_handler)
-logger.addHandler(critical_handler)
+logger.addHandler(error_formatter)
+# logger.addHandler(debug_handler)
+# logger.addHandler(info_handler)
+# logger.addHandler(warning_handler)
+# logger.addHandler(error_handler)
+# logger.addHandler(critical_handler)
 
 # Sentry config for logging
 # import sentry_sdk
 # from sentry_sdk.integrations.logging import LoggingIntegration
 
-# # All of this is already happening by default!
 # sentry_logging = LoggingIntegration(
 #     level=logging.DEBUG,        # Capture info and above as breadcrumbs
 #     event_level=logging.INFO  # Send errors as events

@@ -47,3 +47,21 @@ logger.addHandler(info_handler)
 logger.addHandler(warning_handler)
 logger.addHandler(error_handler)
 logger.addHandler(critical_handler)
+
+# Sentry config for logging
+# import sentry_sdk
+# from sentry_sdk.integrations.logging import LoggingIntegration
+
+# # All of this is already happening by default!
+# sentry_logging = LoggingIntegration(
+#     level=logging.DEBUG,        # Capture info and above as breadcrumbs
+#     event_level=logging.INFO  # Send errors as events
+# )
+# sentry_sdk.init(
+#     dsn="",
+
+#     # Set traces_sample_rate to 1.0 to capture 100%
+#     # of transactions for performance monitoring.
+#     # We recommend adjusting this value in production.
+#     traces_sample_rate=1.0
+# )

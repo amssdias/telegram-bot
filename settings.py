@@ -40,10 +40,10 @@ error_formatter = logging.Formatter("%(levelname)-8s %(asctime)s: %(message)s - 
 
 # Create a console handler
 console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-console_handler.setFormatter(logging.INFO)
+console_handler.setLevel(logging.CRITICAL)
+console_handler.setFormatter(error_formatter)
 
-logger.addHandler(error_formatter)
+logger.addHandler(console_handler)
 # logger.addHandler(debug_handler)
 # logger.addHandler(info_handler)
 # logger.addHandler(warning_handler)

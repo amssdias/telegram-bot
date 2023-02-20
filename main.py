@@ -1,5 +1,5 @@
 from bot.rocket_bot import RocketBot
-from settings import BOT_TOKEN
+from settings.settings import BOT_TOKEN
 
 
 if __name__ == "__main__":

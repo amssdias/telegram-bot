@@ -4,7 +4,7 @@ import telebot
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 from model.users import Users
-from settings import VIDEO_URL
+from settings.settings import VIDEO_URL
 from videos_api.rocket_launch import RocketLaunchAPI
 from videos_api.utils import get_video_info
 

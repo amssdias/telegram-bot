@@ -1,8 +1,12 @@
+import logging
 import telebot
 import unittest
 from unittest.mock import MagicMock, patch
 
 from bot.rocket_bot import RocketBot
+
+
+logging.disable(logging.CRITICAL)
 
 
 class TestRocketBot(unittest.TestCase):

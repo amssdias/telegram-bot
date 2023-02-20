@@ -8,7 +8,7 @@ load_dotenv()
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 VIDEO_URL = "https://framex-dev.wadrid.net/api/video/"
 
-DEBUG = os.environ.get("DEBUG", True)
+DEBUG = os.environ.get("DEBUG", False)
 
 # Logging config
 logger = logging.getLogger("telegram-bot-logger")
